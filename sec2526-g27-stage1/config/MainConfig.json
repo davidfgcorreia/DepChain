@@ -1,0 +1,8 @@
+{
+    "replicas": [
+        {"id": 0, "port": 7000, "byzantine": 0, "connection": 0},
+        {"id": 1, "port": 7010, "byzantine": 0, "connection": 0},
+        {"id": 2, "port": 7020, "byzantine": 0, "connection": 0},
+        {"id": 3, "port": 7030, "byzantine": 0, "connection": 0}
+    ]
+}

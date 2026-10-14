@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.g27</groupId>
+    <artifactId>DepChain</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Skip tests by default; enable via -Prun-tests -->
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>consensys-teku</id>
+            <url>https://dl.cloudsmith.io/public/consensys/teku/maven/</url>
+        </repository>
+        <repository>
+            <id>consensys-maven</id>
+            <url>https://artifacts.consensys.net/public/maven/maven/</url>
+        </repository>
+        <repository>
+            <id>hyperledger-besu</id>
+            <url>https://hyperledger.jfrog.io/artifactory/besu-maven/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+
+        <!-- Threshold Signatures (Ed25519) -->
+        <dependency>
+            <groupId>com.weavechain</groupId>
+            <artifactId>threshold-sig</artifactId>
+            <version>1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.weavechain</groupId>
+            <artifactId>curve25519-elisabeth</artifactId>
+            <version>0.1.5</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tech.pegasys.teku.internal</groupId>
+            <artifactId>bls</artifactId>
+            <version>24.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>tech.pegasys.teku.internal</groupId>
+            <artifactId>spec</artifactId>
+            <version>24.12.0</version>
+        </dependency>
+
+        <!-- Smart contract / EVM runtime dependencies -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tuweni</groupId>
+            <artifactId>tuweni-bytes</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tuweni</groupId>
+            <artifactId>tuweni-crypto</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tuweni</groupId>
+            <artifactId>tuweni-units</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>crypto</artifactId>
+            <version>5.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hyperledger.besu</groupId>
+            <artifactId>evm</artifactId>
+            <version>25.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hyperledger.besu</groupId>
+            <artifactId>besu-datatypes</artifactId>
+            <version>25.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>2.0.17</version>
+        </dependency>
+
+        <!-- BouncyCastle provider to supply KECCAK-256 MessageDigest at runtime -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
+
+    </dependencies>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <mainClass>com.g27.DepChain.App</mainClass>
+            </configuration>
+        </plugin>
+        <!-- Web3j plugin will run after frontend plugin (moved lower) -->
+        <!-- Node-based frontend plugin removed — using web3j/solc directly -->
+        <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.3.0</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.g27.DepChain.App</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+        <!-- Web3j plugin moved to profile 'web3j' (not active by default) -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version>
+            <configuration>
+                <skipTests>${maven.test.skip}</skipTests>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+    <profiles>
+        <profile>
+            <id>run-tests</id>
+            <properties>
+                <maven.test.skip>false</maven.test.skip>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <configuration>
+                            <!-- keep output concise when running this profile -->
+                            <trimStackTrace>true</trimStackTrace>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>run-client</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <mainClass>com.g27.DepChain.Client.ClientApp</mainClass>
+                        </configuration>
+                    </plugin>
+                    <!-- Enforce that the run-client profile is invoked with a client.id property -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-client-id</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>client.id</property>
+                                            <message>Property 'client.id' is required for running the client. Use -Dclient.id=123</message>
+                                        </requireProperty>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>web3j</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.web3j</groupId>
+                        <artifactId>web3j-maven-plugin</artifactId>
+                        <version>4.8.7</version>
+                        <executions>
+                            <execution>
+                                <id>generate-solidity-artifacts</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate-sources</goal>
+                                </goals>
+                                <configuration>
+                                    <soliditySourceLocations>
+                                        <location>${project.basedir}/src/main/resources</location>
+                                    </soliditySourceLocations>
+                                    <solcVersion>0.8.26</solcVersion>
+                                    <downloadSolc>true</downloadSolc>
+                                    <generateJava>false</generateJava>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

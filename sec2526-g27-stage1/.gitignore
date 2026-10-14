@@ -1,0 +1,13 @@
+# Maven build output
+target/
+
+# Runtime-generated keys and config
+config/public_keys.json
+
+# Persisted block store
+data/
+
+# IDE
+.vscode/
+.idea/
+*.iml

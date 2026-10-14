@@ -1,0 +1,51 @@
+# Maven
+target/
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+Springer_Lecture_Notes_in_Computer_Science/*
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDE - VS Code
+.vscode/
+
+# IDE - IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - Eclipse
+.eclipse/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+CLAUDE.md
+.claude/
+
+#extra
+.factorypath
+
+
+SEC-2526 project - stage 2.pdf
+
+sec2526-g27-stage1/data/blocks/
+
+SEC-2526 project - stage 2.txt
+
+STAGE2_PLAN.md
